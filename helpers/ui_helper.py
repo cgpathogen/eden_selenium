@@ -1,0 +1,48 @@
+import allure
+from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.wait import WebDriver, WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+class UIHelper:
+
+    def __init__(self, driver):
+        self.driver : WebDriver = driver
+        self.actions = ActionChains(driver)
+        self.wait = WebDriverWait(driver,timeout=10,poll_frequency=1)
+
+    # open
+
+    @allure.step("Open page")
+    def open(self):
+        with allure.step(f"Open page {self.page_url}"):
+            self.driver.get(self.page_url)
+
+    # waits
+
+    def wait_to_be_clickable(self, locator):
+        element = self.wait.until(EC.element_to_be_clickable(self.locator_maker(locator)))
+        return element
+
+    def wait_to_be_visible(self, locator):
+        element = self.wait.until(EC.visibility_of_element_located(self.locator_maker(locator)))
+        return element
+
+    # scrolls
+
+    @allure.step("scrolling page")
+    def scroll(self,up, down):
+        self.driver.execute_script(f"window.scrollBy({up}, {down});")
+
+    # other
+
+    def locator_maker(self, xpath, index=None, option=None):
+        """
+        универсальный метод во избежание дублирования кода
+        """
+        if index is not None:
+            return ("xpath",f"{xpath}[{index}]")
+        if option is not None:
+            return ("xpath", f"{xpath}[{index}]{option}")
+        return ("xpath", xpath)
