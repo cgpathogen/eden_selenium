@@ -1,5 +1,5 @@
 import allure
-
+from selenium.common.exceptions import StaleElementReferenceException
 from helpers.ui_helper import UIHelper
 
 class BasePage(UIHelper):
@@ -18,7 +18,7 @@ class BasePage(UIHelper):
     _select_city_window_locator = "//div[@class='select-city__modal-wrap']"
     _search_city_input_locator = "//input[@class='select-city__input']"
     _select_city_close_popup = "//div[@class='select-city__close']"
-
+    dropdown_city_name_locator = "(//div[@class='select-city__block__text'])[2]"
 
     # actions
 
@@ -60,3 +60,9 @@ class BasePage(UIHelper):
     def choose_city_from_result(self):
         locator = f"//p[contains(text(), ' {self.search_city_name} ')]"
         self.wait_to_be_clickable(locator).click()
+
+    @allure.step("Check city name align")
+    def check_city_name_align(self):
+        self.driver.refresh()
+        locator = self.wait_to_be_visible(self.dropdown_city_name_locator)
+        assert self.search_city_name == locator.text
