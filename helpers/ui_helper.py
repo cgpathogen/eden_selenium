@@ -36,6 +36,12 @@ class UIHelper:
             element = self.wait.until(EC.visibility_of_element_located(self.locator_maker(locator)))
         return element
 
+    # actions
+
+    def hover(self, locator):
+        element = self.wait_to_be_visible(locator)
+        self.actions.move_to_element(element).perform()
+
     # scrolls
 
     @allure.step("scrolling page")
