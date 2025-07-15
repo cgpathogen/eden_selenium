@@ -13,6 +13,10 @@ class BasePage(UIHelper):
     _favorite_btn_locator = "(//div[@class='header__actions-item'])[2]"
     _cart_btn_locator = "(//div[@class='header__actions-item'])[3]"
 
+    # navbar
+
+    catalogue_button_locator = "(//div[@class='hr3-menu__item__submenu hr3-menu__item-wrap'])[1]"
+
     ## choose city
 
     _search_input_locator = "//input[@id='smart-title-search-input']"
@@ -82,6 +86,23 @@ class BasePage(UIHelper):
     @allure.step("authorization: click enter button")
     def auth_click_enter_button(self):
         self.wait_to_be_clickable(self._login_button_locator).click()
+
+    @allure.step("Hover catalogue button")
+    def hover_catalogue_button(self):
+        self.hover(self.catalogue_button_locator)
+
+    @allure.step("hover link in catalogue: 1st lvl")
+    def hover_link_in_catalogue_1st_lvl(self, index):
+        locator = "//div[@class='catalog-menu__inner']/div"+f"[{index}]/a"
+        self.hover(locator)
+
+    @allure.step("hover link in catalogue: 2st lvl")
+    def hover_link_in_catalogue_2st_lvl(self, index, click=False):
+        locator = "//*[@id='page-wrapper']/div[1]/header/div/div[3]/div/div[1]/div/div/div[4]/div/div/div"+f"[{index}]/div/a"
+        if click:
+            self.wait_to_be_clickable(locator).click()
+        else:
+            self.hover(locator)
 
     # methods
 
