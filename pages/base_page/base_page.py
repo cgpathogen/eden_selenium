@@ -1,5 +1,4 @@
 import allure
-from selenium.common.exceptions import StaleElementReferenceException
 from helpers.ui_helper import UIHelper
 
 class BasePage(UIHelper):
@@ -8,9 +7,14 @@ class BasePage(UIHelper):
 
     # locators
 
-    _enter_btn_locator = "//a[@title='Войти']"
-    _favorite_btn_locator = "//a[@class='favor-list-wrap icon']"
-    _cart_btn_locator = "//a[@title='Корзина']"
+    ## main user links
+
+    _enter_btn_locator = "(//div[@class='header__actions-item'])[1]"
+    _favorite_btn_locator = "(//div[@class='header__actions-item'])[2]"
+    _cart_btn_locator = "(//div[@class='header__actions-item'])[3]"
+
+    ## choose city
+
     _search_input_locator = "//input[@id='smart-title-search-input']"
     _select_city_popup_locator = "//div[@class='select-city__dropdown']"
     _choose_yes_btn_locator = "//span[@class='btn select-city__dropdown__choose__yes select-city__dropdown__choose']"
@@ -19,6 +23,14 @@ class BasePage(UIHelper):
     _search_city_input_locator = "//input[@class='select-city__input']"
     _select_city_close_popup = "//div[@class='select-city__close']"
     dropdown_city_name_locator = "(//div[@class='select-city__block__text'])[2]"
+
+    ## authorization
+
+    _pop_up_title_locator = "//h3[@class='bx-title']"
+    _input_email_locator = "//input[@name='USER_LOGIN']"
+    _input_user_password_locator = "//input[@name='USER_PASSWORD']"
+    _checkbox_locator = "//label[@class='bx-filter-param-label']"
+    _login_button_locator = "//input[@class='btn btn-primary']"
 
     # actions
 
@@ -53,6 +65,23 @@ class BasePage(UIHelper):
     @allure.step("click close search city popup")
     def click_select_city_close_popup(self):
         self.wait_to_be_clickable(self._select_city_close_popup).click()
+
+    @allure.step("get popup title")
+    def get_popup_title(self):
+        element = self.wait_to_be_visible(self._pop_up_title_locator)
+        assert element.text == "Пожалуйста, авторизуйтесь"
+
+    @allure.step("authorization: enter email")
+    def auth_enter_email(self, email):
+        self.wait_to_be_clickable(self._input_email_locator).send_keys(email)
+
+    @allure.step("authorization: enter password")
+    def auth_enter_password(self, password):
+        self.wait_to_be_clickable(self._input_user_password_locator).send_keys(password)
+
+    @allure.step("authorization: click enter button")
+    def auth_click_enter_button(self):
+        self.wait_to_be_clickable(self._login_button_locator).click()
 
     # methods
 
