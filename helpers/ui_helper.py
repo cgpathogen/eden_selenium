@@ -1,4 +1,5 @@
 import allure
+from selenium.common import StaleElementReferenceException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
@@ -22,11 +23,17 @@ class UIHelper:
     # waits
 
     def wait_to_be_clickable(self, locator):
-        element = self.wait.until(EC.element_to_be_clickable(self.locator_maker(locator)))
+        try:
+            element = self.wait.until(EC.element_to_be_clickable(self.locator_maker(locator)))
+        except StaleElementReferenceException:
+            element = self.wait.until(EC.element_to_be_clickable(self.locator_maker(locator)))
         return element
 
     def wait_to_be_visible(self, locator):
-        element = self.wait.until(EC.visibility_of_element_located(self.locator_maker(locator)))
+        try:
+            element = self.wait.until(EC.visibility_of_element_located(self.locator_maker(locator)))
+        except StaleElementReferenceException:
+            element = self.wait.until(EC.visibility_of_element_located(self.locator_maker(locator)))
         return element
 
     # scrolls
