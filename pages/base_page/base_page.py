@@ -15,7 +15,7 @@ class BasePage(UIHelper):
 
     # navbar
 
-    catalogue_button_locator = "(//div[@class='hr3-menu__item__submenu hr3-menu__item-wrap'])[1]"
+    _catalogue_button_locator = "(//div[@class='hr3-menu__item__submenu hr3-menu__item-wrap'])[1]"
 
     ## choose city
 
@@ -26,7 +26,7 @@ class BasePage(UIHelper):
     _select_city_window_locator = "//div[@class='select-city__modal-wrap']"
     _search_city_input_locator = "//input[@class='select-city__input']"
     _select_city_close_popup = "//div[@class='select-city__close']"
-    dropdown_city_name_locator = "(//div[@class='select-city__block__text'])[2]"
+    _dropdown_city_name_locator = "(//div[@class='select-city__block__text'])[2]"
 
     ## authorization
 
@@ -35,6 +35,12 @@ class BasePage(UIHelper):
     _input_user_password_locator = "//input[@name='USER_PASSWORD']"
     _checkbox_locator = "//label[@class='bx-filter-param-label']"
     _login_button_locator = "//input[@class='btn btn-primary']"
+
+    ## cart
+
+    _cart_popup_item_name_locator = "(//a[@class='small-cart-item__name-link'])"
+    _cart_popup_item_amount_locator = "(//div[@class='small-cart-item__count'])"
+    _cart_popup_price_locator = "((//div[@class='small-cart-item__price']))"
 
     # actions
 
@@ -89,7 +95,7 @@ class BasePage(UIHelper):
 
     @allure.step("Hover catalogue button")
     def hover_catalogue_button(self):
-        self.hover(self.catalogue_button_locator)
+        self.hover(self._catalogue_button_locator)
 
     @allure.step("hover link in catalogue: 1st lvl")
     def hover_link_in_catalogue_1st_lvl(self, index):
@@ -114,5 +120,11 @@ class BasePage(UIHelper):
     @allure.step("Check city name align")
     def check_city_name_align(self):
         self.driver.refresh()
-        locator = self.wait_to_be_visible(self.dropdown_city_name_locator)
+        locator = self.wait_to_be_visible(self._dropdown_city_name_locator)
         assert self.search_city_name == locator.text
+
+    def divide_price(self, price, old_price=False):
+        if old_price:
+            return int(price.split("₽")[1].replace(" ", ""))
+        else:
+            return int(price.split("₽")[0].replace(" ", ""))
