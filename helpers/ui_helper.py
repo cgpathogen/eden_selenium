@@ -21,24 +21,24 @@ class UIHelper:
 
     # waits
 
-    def wait_to_be_clickable(self, locator):
+    def wait_to_be_clickable(self, locator, index=None):
         try:
-            element = self.wait.until(EC.element_to_be_clickable(self.locator_maker(locator)))
+            element = self.wait.until(EC.element_to_be_clickable(self.locator_maker(locator,index)))
         except StaleElementReferenceException:
-            element = self.wait.until(EC.element_to_be_clickable(self.locator_maker(locator)))
+            element = self.wait.until(EC.element_to_be_clickable(self.locator_maker(locator,index)))
         return element
 
-    def wait_to_be_visible(self, locator):
+    def wait_to_be_visible(self, locator, index=None):
         try:
-            element = self.wait.until(EC.visibility_of_element_located(self.locator_maker(locator)))
+            element = self.wait.until(EC.visibility_of_element_located(self.locator_maker(locator, index)))
         except StaleElementReferenceException:
-            element = self.wait.until(EC.visibility_of_element_located(self.locator_maker(locator)))
+            element = self.wait.until(EC.visibility_of_element_located(self.locator_maker(locator, index)))
         return element
 
     # actions
 
-    def hover(self, locator):
-        element = self.wait_to_be_visible(locator)
+    def hover(self, locator, index=None):
+        element = self.wait_to_be_visible(locator, index)
         self.actions.move_to_element(element).perform()
 
     # scrolls
