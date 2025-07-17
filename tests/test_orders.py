@@ -13,4 +13,13 @@ class TestOrder(BaseTest):
         self.mainPage.hover_catalogue_button()
         self.mainPage.hover_link_in_catalogue_1st_lvl(3) # -> парфюмерия
         self.mainPage.hover_link_in_catalogue_2st_lvl(2,True) # -> мужская парфюмерия
+        self.cataloguePage.filters.click_sort_options_dropdown()
+        self.cataloguePage.filters.click_sort_by_price_asc()
+        self.cataloguePage.filters.enter_min_price(900)
+        self.cataloguePage.filters.enter_max_price(2250)
+        self.cataloguePage.filters.click_show_results_by_price_btn()
+        self.cataloguePage.add_goods_to_cart() # алгоритм добавления товаров в корзину
+        self.cataloguePage.click_cart_button()
+        self.cartPage.check_data_match_in_cart()
+        self.cartPage.click_go_to_cart_button()
         time.sleep(5)
