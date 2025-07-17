@@ -12,6 +12,7 @@ class Database:
             cur.execute(f"""
             CREATE TABLE {Database.table_name}(
             product_id INTEGER NOT NULL PRIMARY KEY,
+            product_brand TEXT NOT NULL,
             product_name TEXT NOT NULL,
             product_price INTEGER NOT NULL
             )
@@ -19,14 +20,14 @@ class Database:
 
 
     @staticmethod
-    def update_data(name, price):
+    def update_data(brand, name, price):
         with sqlite3.connect(Database.db_path) as db:
             cur = db.cursor()
-            data = (name,price)
+            data = (brand, name, price)
             cur.execute(f"""
-            INSERT INTO {Database.table_name} (product_name, product_price)
+            INSERT INTO {Database.table_name} (product_brand, product_name, product_price)
             VALUES
-            (?,?)
+            (?,?,?)
             """,data)
             db.commit()
 
@@ -36,7 +37,7 @@ class Database:
         with sqlite3.connect(Database.db_path) as db:
             cur = db.cursor()
             cur.execute(f"""
-            SELECT product_name, product_price 
+            SELECT product_brand, product_name, product_price 
             FROM {Database.table_name} 
             WHERE product_id=?
             """,(id,))
