@@ -2,6 +2,7 @@ import allure
 from selenium.common import StaleElementReferenceException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.expected_conditions import element_to_be_clickable
 from selenium.webdriver.support.wait import WebDriver, WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -40,6 +41,11 @@ class UIHelper:
     def hover(self, locator, index=None):
         element = self.wait_to_be_visible(locator, index)
         self.actions.move_to_element(element).perform()
+
+
+    def click(self, locator, index=None):
+        element = self.wait_to_be_clickable(locator, index)
+        self.actions.click(element).perform()
 
     # scrolls
 
