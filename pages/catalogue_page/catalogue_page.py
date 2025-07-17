@@ -1,4 +1,6 @@
 import allure
+
+from database.database import Database
 from pages.base_page.base_page import BasePage
 from pages.catalogue_page.components.filters import Filters
 from count import count
@@ -9,20 +11,49 @@ class CataloguePage(BasePage):
         super().__init__(driver)
         self.filters = Filters(driver)
 
-        # locators
+    # locators
 
-        ## item components
+    _item_locator = "//div[@class='product-list-item']"
 
-        item_favourite_btn_locator = "(//div[@class='product-item__favorite favorite-icon h2o_add_favor'])"
-        item_brand_locator = "(//div[@class='product-item__title-brand'])"
-        item_name_locator = "(//div[@class='product-item__title-name'])"
-        item_price_locator = "(//div[@class='product-item__price-current'])"
-        item_add_to_cart_btn_locator = "(//div[@class='product-item__cart'])"
+    ## item components
 
-        ## popup components
+    _item_favourite_btn_locator = "//div[@class='product-item__favorite favorite-icon h2o_add_favor']"
+    _item_brand_locator = "(//div[@class='product-item__title-brand'])"
+    _item_name_locator = "(//div[@class='product-item__title-name'])"
+    _item_price_locator = "(//div[@class='product-item__price-current'])"
+    _item_add_to_cart_btn_locator = "(//div[contains(@class, 'product-item__cart-btn')])"
 
-        popup_brand_locator = "//div[@class='like_h1']" # .text
-        popup_name_locator = "//h2[@class='like_h2']"
-        popup_price_locator = "//div[@class='ctp_current']" # .text
-        popup_go_to_cart_btn_locator = "//a[@id='link']"
-        keep_shopping_btn_locator = "(//a[@class='d_close btn'])[1]"
+    ## popup components
+
+    _popup_locator = "//div[@class='dialog d_small cart-popup']"
+    _popup_brand_locator = "//div[@class='like_h1']" # .text
+    _popup_name_locator = "//h2[@class='like_h2']"
+    _popup_price_locator = "//div[@class='ctp_current']" # .text
+    _popup_go_to_cart_btn_locator = "//a[@id='link']"
+    _keep_shopping_btn_locator = "(//a[@class='d_close btn'])[1]"
+
+    # methods
+
+    @allure.step("Add goods to cart")
+    def add_goods_to_cart(self):
+        for i in range(1, count):
+            # inner locators
+            item_locator = f"{self._item_locator}[{i}]"
+
+            item_brand_locator = f"{self._item_brand_locator}[{i}]"
+            item_brand = self.wait_to_be_visible(item_brand_locator).text
+
+            item_name_locator = f"{self._item_name_locator}[{i}]"
+            item_name = self.wait_to_be_visible(item_name_locator).text
+
+            item_price_locator = f"{self._item_price_locator}[{i}]"
+            item_price = self.divide_price(self.wait_to_be_visible(item_price_locator).text)
+
+            add_to_cart_button = f"{self._item_add_to_cart_btn_locator}[{i}]"
+
+            # main algorythm
+            self.hover(item_locator) # ховер на карточку товара
+            Database.update_data(item_brand, item_name, item_price) # cохранение бренда имени и цены в базу данных
+            self.wait_to_be_clickable(add_to_cart_button).click() # клик на кнопку добавления товара
+            self.hover(self._popup_locator) # ожидание поп-апа
+            self.wait_to_be_clickable(self._keep_shopping_btn_locator).click() # клик "продолжить покупку
