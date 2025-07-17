@@ -41,10 +41,10 @@ class CataloguePage(BasePage):
             item_locator = f"{self._item_locator}[{i}]"
 
             item_brand_locator = f"{self._item_brand_locator}[{i}]"
-            item_brand = self.wait_to_be_visible(item_brand_locator).text
+            item_brand = self.wait_to_be_visible(item_brand_locator).text.lower()
 
             item_name_locator = f"{self._item_name_locator}[{i}]"
-            item_name = self.wait_to_be_visible(item_name_locator).text
+            item_name = self.wait_to_be_visible(item_name_locator).text.lower()
 
             item_price_locator = f"{self._item_price_locator}[{i}]"
             item_price = self.divide_price(self.wait_to_be_visible(item_price_locator).text)
@@ -56,4 +56,17 @@ class CataloguePage(BasePage):
             Database.update_data(item_brand, item_name, item_price) # cохранение бренда имени и цены в базу данных
             self.wait_to_be_clickable(add_to_cart_button).click() # клик на кнопку добавления товара
             self.hover(self._popup_locator) # ожидание поп-апа
-            self.wait_to_be_clickable(self._keep_shopping_btn_locator).click() # клик "продолжить покупку
+
+            # popup locators
+            ## парсинг данных из поп-апа
+
+            popup_brand = self.wait_to_be_visible(self._popup_brand_locator).text.lower()
+            popup_item_name = self.wait_to_be_visible(self._popup_name_locator).text.lower()
+            get_popup_item_price = self.wait_to_be_visible(self._popup_price_locator).text # удаление знака рубля от цены
+            popup_item_price = self.divide_price(get_popup_item_price) # цена
+
+            assert Database.select_item_data(i)[0] == popup_brand
+            assert Database.select_item_data(i)[1] == popup_item_name
+            assert Database.select_item_data(i)[2] == popup_item_price
+
+            self.wait_to_be_clickable(self._keep_shopping_btn_locator).click() # клик "продолжить покупку"
