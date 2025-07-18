@@ -1,9 +1,8 @@
-import time
 import allure
 from base.base_test import BaseTest
 
 @allure.epic("Orders")
-@allure.feature("Place order by authorized user")
+@allure.feature("Place order by unauthorized user")
 class TestOrder(BaseTest):
 
     @allure.title("Order via searching in catalogue")
@@ -22,4 +21,5 @@ class TestOrder(BaseTest):
         self.cataloguePage.click_cart_button()
         self.cartPage.check_data_match_in_cart()
         self.cartPage.click_go_to_cart_button()
-        time.sleep(5)
+        self.orderPage.check_products_data_match()
+        self.orderPage.user_fields.enter_user_data()
