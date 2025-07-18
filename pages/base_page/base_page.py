@@ -125,6 +125,6 @@ class BasePage(UIHelper):
 
     def divide_price(self, price, old_price=False):
         if old_price:
-            return int(price.split("₽")[1].replace(" ", ""))
+            return float(price.split("₽")[1].replace(" ", ""))
         else:
-            return int(price.split("₽")[0].replace(" ", ""))
+            return float(price.split("₽")[0].replace(" ", ""))
