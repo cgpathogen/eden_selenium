@@ -74,16 +74,18 @@ class CataloguePage(BasePage):
     @allure.step("Parse items data")
     def parse_items_data(self):
         """
-        метод проверяет наличие текста из популярного запроса в названии элемента в каталоге
+        метод проверяет наличие текста из популярного запроса в названии элемента в каталоге на первой странице выдачи
+        цикл перебирает значения от 2 до 5 (первое значение "eden" и не присутствует в названиях элементов), проверяя
+        каждый из популярных запросов
         """
         for i in range(2,5+1):
             self.hover(self._search_field_locator)
             request_locator = f"{self._popular_request_locator}[{i}]"
-            request_text = self.wait_to_be_visible(request_locator).text.lower()
-            self.wait_to_be_clickable(request_locator).click()
+            request_text = self.wait_to_be_visible(request_locator).text.lower() # текст их популярного запроса
+            self.wait_to_be_clickable(request_locator).click() # клик по запросу в инпуте
 
-            elements = self.find_several_elements(self._item_name_locator)
+            elements = self.find_several_elements(self._item_name_locator) # список айтемов в выдаче
             for element in elements:
-                assert request_text in element.text.lower()
+                assert request_text in element.text.lower() # поиск текста в названии айтема
 
-            self.clear_field(self._search_field_locator)
+            self.clear_field(self._search_field_locator) # очистка инпута перед следующей итерацией цикла
