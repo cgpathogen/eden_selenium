@@ -70,3 +70,20 @@ class CataloguePage(BasePage):
             assert Database.select_item_data(i)[2] == popup_item_price
 
             self.wait_to_be_clickable(self._keep_shopping_btn_locator).click() # клик "продолжить покупку"
+
+    @allure.step("Parse items data")
+    def parse_items_data(self):
+        """
+        метод проверяет наличие текста из популярного запроса в названии элемента в каталоге
+        """
+        for i in range(2,5+1):
+            self.hover(self._search_field_locator)
+            request_locator = f"{self._popular_request_locator}[{i}]"
+            request_text = self.wait_to_be_visible(request_locator).text.lower()
+            self.wait_to_be_clickable(request_locator).click()
+
+            elements = self.find_several_elements(self._item_name_locator)
+            for element in elements:
+                assert request_text in element.text.lower()
+
+            self.clear_field(self._search_field_locator)
