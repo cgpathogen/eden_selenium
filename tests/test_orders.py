@@ -2,10 +2,10 @@ import allure
 from base.base_test import BaseTest
 
 @allure.epic("Orders")
-@allure.feature("Place order by unauthorized user")
+@allure.feature("Orders through Catalogue")
 class TestOrder(BaseTest):
 
-    @allure.title("Order via searching in catalogue")
+    @allure.title("Place order by unauthorized user")
     def test_order_via_searching_in_catalogue(self):
         self.mainPage.open()
         self.mainPage.click_choose_yes_button() # скрываем поп-ап с выбором города, который перекрывает кнопку каталога
