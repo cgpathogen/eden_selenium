@@ -5,6 +5,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.expected_conditions import element_to_be_clickable
 from selenium.webdriver.support.wait import WebDriver, WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
 class UIHelper:
 
@@ -12,6 +14,19 @@ class UIHelper:
         self.driver : WebDriver = driver
         self.actions = ActionChains(driver)
         self.wait = WebDriverWait(driver,timeout=10,poll_frequency=1)
+
+
+    # driver...
+
+    @allure.step("find several elements")
+    def find_several_elements(self, locator):
+        return self.driver.find_elements(By.XPATH,locator)
+
+
+    @allure.step("clear field")
+    def clear_field(self, locator):
+        self.driver.find_element(By.XPATH,locator).send_keys(Keys.COMMAND+"A")
+        self.driver.find_element(By.XPATH,locator).send_keys(Keys.DELETE)
 
     # open
 
