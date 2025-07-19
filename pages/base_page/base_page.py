@@ -16,6 +16,8 @@ class BasePage(UIHelper):
     # navbar
 
     _catalogue_button_locator = "(//div[@class='hr3-menu__item__submenu hr3-menu__item-wrap'])[1]"
+    _search_field_locator = "//input[@id='smart-title-search-input']"
+    _popular_request_locator = "//a[@class='popular-requests__item']"
 
     ## choose city
 
@@ -93,9 +95,17 @@ class BasePage(UIHelper):
     def auth_click_enter_button(self):
         self.wait_to_be_clickable(self._login_button_locator).click()
 
+    @allure.step("hover search_field")
+    def hover_search_field(self):
+        self.actions.move_to_element(self._search_field_locator).perform()
+
     @allure.step("Hover catalogue button")
     def hover_catalogue_button(self):
         self.hover(self._catalogue_button_locator)
+
+    @allure.step("Click catalogue button")
+    def click_catalogue_button(self):
+        self.wait_to_be_clickable(self._catalogue_button_locator).click()
 
     @allure.step("hover link in catalogue: 1st lvl")
     def hover_link_in_catalogue_1st_lvl(self, index):
