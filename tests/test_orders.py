@@ -2,7 +2,8 @@ import allure
 from base.base_test import BaseTest
 
 @allure.epic("Orders")
-@allure.feature("Orders through Catalogue")
+@allure.story("Orders through Catalogue")
+@allure.feature("Cart")
 class TestOrder(BaseTest):
 
     @allure.title("Place order by unauthorized user")
