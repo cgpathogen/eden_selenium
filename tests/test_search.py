@@ -2,8 +2,7 @@ import time
 import allure
 from base.base_test import BaseTest
 
-@allure.epic("Orders")
-@allure.story("Search")
+@allure.epic("Search")
 class TestSearch(BaseTest):
 
     @allure.title("Check popular request in all items' names in catalogue")
