@@ -1,4 +1,6 @@
 import allure
+from selenium.common import StaleElementReferenceException
+
 from helpers.ui_helper import UIHelper
 
 class BasePage(UIHelper):
@@ -37,6 +39,7 @@ class BasePage(UIHelper):
     _input_user_password_locator = "//input[@name='USER_PASSWORD']"
     _checkbox_locator = "//label[@class='bx-filter-param-label']"
     _login_button_locator = "//input[@class='btn btn-primary']"
+    _incorrect_data_alert_locator = "//div[@class='alert alert-danger']"
 
     ## cart
 
@@ -48,15 +51,24 @@ class BasePage(UIHelper):
 
     @allure.step("click enter to personal cabinet button")
     def click_enter_button(self):
-        self.wait_to_be_clickable(self._enter_btn_locator).click()
+        try:
+            self.wait_to_be_clickable(self._enter_btn_locator).click()
+        except StaleElementReferenceException:
+            self.wait_to_be_clickable(self._enter_btn_locator).click()
 
     @allure.step("click favourite button")
     def click_favorite_button(self):
-        self.wait_to_be_clickable(self._favorite_btn_locator).click()
+        try:
+            self.wait_to_be_clickable(self._favorite_btn_locator).click()
+        except StaleElementReferenceException:
+            self.wait_to_be_clickable(self._favorite_btn_locator).click()
 
     @allure.step("click cart button")
     def click_cart_button(self):
-        self.wait_to_be_clickable(self._cart_btn_locator).click()
+        try:
+            self.wait_to_be_clickable(self._cart_btn_locator).click()
+        except StaleElementReferenceException:
+            self.wait_to_be_clickable(self._cart_btn_locator).click()
 
     @allure.step("Enter text to search input")
     def enter_text_to_search_input(self, text):
@@ -82,6 +94,11 @@ class BasePage(UIHelper):
     def get_popup_title(self):
         element = self.wait_to_be_visible(self._pop_up_title_locator)
         assert element.text == "Пожалуйста, авторизуйтесь"
+
+    @allure.step("get incorrect data message title")
+    def get_incorrect_data_message_text(self):
+        element = self.wait_to_be_visible(self._incorrect_data_alert_locator)
+        assert element.text == "Неверный логин или пароль."
 
     @allure.step("authorization: enter email")
     def auth_enter_email(self, email):
