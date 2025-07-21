@@ -1,9 +1,12 @@
+import time
+
 import allure
-from selenium.webdriver.common.devtools.v136.input_ import DragData
+from selenium.webdriver import Keys
 
 from database.database import Database
 from pages.base_page.base_page import BasePage
 from count import count
+from random import randint
 
 class CartPage(BasePage):
 
@@ -42,10 +45,51 @@ class CartPage(BasePage):
         element = self.wait_to_be_visible(self._cart_total_price_locator).text
         return self.divide_price(element)
 
+    # methods
 
     @allure.step("Close advertisement")
     def close_advertisement(self):
         self.wait_to_be_visible(self._close_advert_button_locator).click()
+
+    @allure.step("change items amount")
+    def change_items_amount(self):
+        """
+        метод тестирует функцию изменения количества единиц товара в корзине
+        и проверяет соответствие цены после изменения
+        """
+        a = 1
+        b = 2
+        total = 0
+        num = randint(1, 3 + 1)  # количество единиц товара
+        for i in range(1,count):
+            input_locator = f"{self._amount_locator}[{i}]"
+
+            # взаимодествие с инпутом
+
+            self.clear_field(input_locator)
+            self.wait_to_be_clickable(input_locator).send_keys(f"{num}")
+            self.wait_to_be_visible(input_locator).send_keys(Keys.TAB)
+
+            # price
+            item_price_for_one = f"{self._item_price_locator}[{a}]"
+            get_item_price = self.wait_to_be_visible(item_price_for_one).text
+            item_price = self.divide_price(get_item_price)
+
+            item_price_total = f"{self._item_price_locator}[{b}]"
+            get_item_price_total = self.wait_to_be_visible(item_price_total).text
+            item_price_total = self.divide_price(get_item_price_total)
+
+            total_item_count = f"{self._amount_locator}[{i}]"
+            get_total_item_count = int(self.wait_to_be_visible(total_item_count).get_attribute("value"))
+
+            assert item_price * num == item_price_total
+            assert item_price * get_total_item_count == item_price_total
+            total += item_price_total
+        time.sleep(2)
+        assert total == self.get_total_price()  # финальная сверка общей цены с суммой за каждый товар в корзине
+
+
+
 
     @allure.step("Click go to cart button")
     def click_go_to_place_order_page(self):
@@ -56,7 +100,6 @@ class CartPage(BasePage):
         a = 1
         b = 2
         total = 0
-        self.close_advertisement() # закрытие поп-апа с предложением
         for i in range(1, count):
             item_locator = f"{self._item_locator}[{i}]"
             self.hover(item_locator)
