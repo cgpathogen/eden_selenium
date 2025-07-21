@@ -48,7 +48,7 @@ class CartPage(BasePage):
         self.wait_to_be_visible(self._close_advert_button_locator).click()
 
     @allure.step("Click go to cart button")
-    def click_go_to_cart_button(self):
+    def click_go_to_place_order_page(self):
         self.wait_to_be_clickable(self._place_order_button_locator).click()
 
     @allure.step("Check data match in cart")
