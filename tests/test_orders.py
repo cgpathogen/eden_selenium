@@ -20,6 +20,6 @@ class TestOrder(BaseTest):
         self.cataloguePage.add_goods_to_cart() # алгоритм добавления товаров в корзину
         self.cataloguePage.click_cart_button()
         self.cartPage.check_data_match_in_cart()
-        self.cartPage.click_go_to_cart_button()
+        self.cartPage.click_go_to_place_order_page()
         self.orderPage.check_products_data_match()
         self.orderPage.user_fields.enter_user_data()
