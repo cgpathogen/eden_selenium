@@ -1,4 +1,5 @@
 import time
+from socket import send_fds
 
 import allure
 from selenium.webdriver import Keys
@@ -23,6 +24,8 @@ class CartPage(BasePage):
 
     _remove_from_cart_button = "(//div[@class='basket-item-actions-remove'])"
     _add_to_favorites_button = "(//a[@class='favorite-icon basket-item-actions-favorite h2o_add_favor'])"
+
+    _removed_item_locator = "(//div[@class='basket-items-list-item-removed-container'])"
 
 
     # page elements locators
@@ -50,6 +53,22 @@ class CartPage(BasePage):
     @allure.step("Close advertisement")
     def close_advertisement(self):
         self.wait_to_be_visible(self._close_advert_button_locator).click()
+
+    @allure.step("remove items from cart")
+    def remove_items_from_cart(self):
+        """
+        метод проверки функционала удаления товаров из корзины
+        """
+        for i in range(1, count):
+            self.hover(self._item_locator)
+            self.click(self._remove_from_cart_button)
+
+            removed_item_locator = f"{self._removed_item_locator}[{i}]/div[1]" # полный текст сообщения об удалении товара
+            removed_item_text = self.wait_to_be_visible(removed_item_locator).text.lower()
+
+            removed_item_name_locator = f"{self._removed_item_locator}[{i}]/div[1]/strong" # название товара из сообщения об удалении
+            removed_item_name = self.wait_to_be_visible(removed_item_name_locator).text.lower()
+            self.wait.until(lambda driver: removed_item_text == f"товар {removed_item_name} был удален из корзины.")
 
 
     @allure.step("Click go to cart button")
