@@ -30,7 +30,7 @@ class CartPage(BasePage):
 
     # page elements locators
 
-    _clear_button_locator = "//input[@class='basket-coupon-clear']"
+    _clear_cart_button_locator = "//input[@class='basket-coupon-clear']"
     _cart_total_price_locator = "//div[@class='basket-coupon-block-total-price-current']"
     _place_order_button_locator = "//button[@class='btn btn-lg btn-default basket-btn-checkout']"
 
