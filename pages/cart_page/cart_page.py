@@ -1,13 +1,8 @@
-import time
-from socket import send_fds
-
 import allure
-from selenium.webdriver import Keys
 
 from database.database import Database
 from pages.base_page.base_page import BasePage
 from count import count
-from random import randint
 
 class CartPage(BasePage):
 
